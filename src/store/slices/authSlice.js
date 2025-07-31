@@ -4,6 +4,7 @@ const TOKEN_KEY = "creator_token";
 
 const initialToken = localStorage.getItem(TOKEN_KEY);
 
+console.log(initialToken);
 const authSlice = createSlice({
   name: "auth",
   initialState: {
