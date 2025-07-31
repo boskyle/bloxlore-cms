@@ -17,7 +17,7 @@ export default defineConfig(({ mode }) => {
     server: {
       historyApiFallback: true, // 🧭 Ensures React Router works on refresh
       host: true, // 👈 Required for Docker access
-      port: 5174, // 👈 Matches docker-compose
+      port: env.DOCKER_PORT, // 👈 Matches docker-compose
       strictPort: true, // 👈 Enforce this exact port
     },
   };
