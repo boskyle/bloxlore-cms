@@ -1,68 +1,29 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@theme {
+  /* 🎨 BloxLore Color Palette */
+  --color-primary: #38bdf8; /* Sky Blue */
+  --color-secondary: #7d68e0; /* Grape Purple */
+  --color-accent: #fb923c; /* Sunset Orange */
+  --color-highlight: #facc15; /* Lemon Yellow */
+  --color-success: #4ade80; /* Mint Green */
+  --color-warning: #f87171; /* Coral Red */
+  --color-offwhite: #fff7ed; /* Off-White */
+  --color-surface: #fdf4ff; /* Creamy White */
+  --color-charcoal: #1e293b; /* Charcoal */
+  --color-muted: #64748b; /* Soft Gray */
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  --font-cartoon: "Fredoka", sans-serif;
+  --font-heading: "Baloo 2", sans-serif;
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+@layer utilities {
+  .text-outline-primary {
+    -webkit-text-stroke: 2px #0284c7;
+    color: var(--color-primary);
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+  .text-outline-surface {
+    -webkit-text-stroke: 2px black;
+    color: var(--color-surface);
   }
 }
