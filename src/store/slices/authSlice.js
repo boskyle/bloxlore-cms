@@ -60,6 +60,7 @@ export const validateToken = createAsyncThunk(
     const token = getState().auth.token;
     if (!token) return rejectWithValue("No token found");
 
+    console.log(token);
     try {
       const res = await axios.get(`${API_BASE}/creator/me`, {
         headers: {

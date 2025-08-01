@@ -70,6 +70,7 @@ const regionsSlice = createSlice({
       })
       .addCase(updateRegion.rejected, (state, action) => {
         state.error = action.payload;
+        alert(state.error.message);
       });
   },
 });
