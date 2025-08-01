@@ -1,56 +1,42 @@
-// src/views/register/RegisterView.jsx
+// Pure HTML & styling for the register form
 
 import React from "react";
 
-/**
- * Presentational component that renders the registration form.
- */
-const RegisterView = ({ form, onChange, onSubmit, loading, error }) => {
+const RegisterView = ({ form, error, onChange, onSubmit }) => {
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Register</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white flex flex-col items-center justify-center px-4">
+      {error && <div className="text-red-500 mb-2 text-sm">{error}</div>}
 
-      {error && <div className="mb-4 text-red-500">{error}</div>}
+      <div className="px-5 py-10 bg-[#333d55] rounded-md max-w-[400px]">
+        <form onSubmit={onSubmit} className="space-y-4">
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={onChange}
+            className="w-full px-3 py-2 border rounded border-muted"
+            required
+          />
 
-      <form onSubmit={onSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={onChange}
-          className="w-full px-4 py-2 border rounded"
-          required
-        />
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={onChange}
+            className="w-full px-3 py-2 border border-muted"
+            required
+          />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={onChange}
-          className="w-full px-4 py-2 border rounded"
-          required
-        />
-
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={onChange}
-          className="w-full px-4 py-2 border rounded"
-          required
-        />
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        >
-          {loading ? "Registering..." : "Register"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full py-2 rounded bg-blue-600 text-white font-bold"
+          >
+            Register
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

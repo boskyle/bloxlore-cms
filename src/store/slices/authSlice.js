@@ -9,6 +9,27 @@ const initialState = {
   token: localStorage.getItem(TOKEN_KEY) || null,
 };
 
+// 🧾 Register new user
+export const registerUser = createAsyncThunk(
+  "auth/registerUser",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${API_BASE}/creator/register`, {
+        email,
+        password,
+      });
+
+      const token = res.data.access_token; // note: different key name than login!
+      localStorage.setItem(TOKEN_KEY, token);
+      return token;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Registration failed. Try again."
+      );
+    }
+  }
+);
+
 // 🚪 Login user via email + password
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -63,9 +84,11 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.token = action.payload;
+      })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.token = action.payload;
-        localStorage.setItem(TOKEN_KEY, action.payload);
       })
       .addCase(validateToken.rejected, (state) => {
         state.token = null;
