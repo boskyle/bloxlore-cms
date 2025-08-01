@@ -67,7 +67,7 @@ export const validateToken = createAsyncThunk(
         },
       });
 
-      return res.data; // optional: return user info
+      return res.data;
     } catch (err) {
       return rejectWithValue("Invalid or expired token");
     }
@@ -92,9 +92,7 @@ const authSlice = createSlice({
         state.token = action.payload;
       })
       .addCase(validateToken.fulfilled, (state, action) => {
-        const { email } = action.payload;
-        console.log(email);
-        state.user = email;
+        state.user = action.payload;
       })
       .addCase(validateToken.rejected, (state) => {
         state.token = null;

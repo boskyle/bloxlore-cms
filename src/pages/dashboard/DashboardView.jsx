@@ -9,7 +9,9 @@ const DashboardView = ({ onLogout, user }) => {
         <div className="mb-6 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-            <p className="text-gray-600">Welcome back, {user}</p>
+            <p className="text-gray-600">
+              Welcome back {JSON.stringify(user?.email || "unkown")}
+            </p>
           </div>
           <button
             onClick={onLogout}

@@ -5,6 +5,7 @@ import LandingContainer from "@pages/landing/LandingContainer";
 import RegisterContainer from "@pages/register/RegisterContainer";
 import LoginContainer from "@pages/login/LoginContainer";
 import { DashboardContainer } from "@pages/dashboard/DashboardContainer";
+import RegionsContainer from "@pages/resources/Regions/RegionsContainer";
 
 import AuthLayout from "@layouts/AuthLayout"; // your layout component
 
@@ -43,6 +44,14 @@ const App = () => {
         element={
           <AuthLayout requireAuth={true}>
             <DashboardContainer />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/regions"
+        element={
+          <AuthLayout requireAuth={true}>
+            <RegionsContainer />
           </AuthLayout>
         }
       />
