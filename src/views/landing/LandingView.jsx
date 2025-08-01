@@ -29,12 +29,6 @@ const LandingView = () => {
           Anima CMS empowers creators to manage in-game content like lore,
           quests, NPCs, and balance updates — all in one place.
         </p>
-        <Link
-          to="/dashboard"
-          className="inline-block bg-teal-500 hover:bg-teal-600 transition text-white font-semibold py-3 px-6 rounded-xl shadow-md"
-        >
-          Enter CMS
-        </Link>
       </main>
 
       <footer className="mt-auto py-6 text-sm text-gray-500">
