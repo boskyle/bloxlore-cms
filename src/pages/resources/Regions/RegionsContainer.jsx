@@ -15,7 +15,7 @@ import RegionsView from "./RegionsView";
 // 🎯 Initial state: no region selected, and no form fields filled
 const initialEditState = {
   editingId: null, // which region is being edited (null means none)
-  fields: {},      // current form values being edited
+  fields: {}, // current form values being edited
 };
 
 // 🧠 Reducer function: handles transitions in the editing UI state
@@ -27,7 +27,7 @@ const editReducer = (state, action) => {
         editingId: action.payload.id,
         fields: {
           name: action.payload.name ?? "",
-          // 👇 Add more fields here if needed (e.g., description, image_url)
+          description: action.payload.description ?? "",
         },
       };
 
@@ -40,10 +40,9 @@ const editReducer = (state, action) => {
           [action.payload.name]: action.payload.value,
         },
       };
-
+    // Cancel or reset editing (same outcome: clear state)
     case "CANCEL_EDIT":
     case "RESET":
-      // Cancel or reset editing (same outcome: clear state)
       return initialEditState;
 
     default:
@@ -107,7 +106,7 @@ const RegionsContainer = () => {
     )
       .unwrap()
       .then(() => {
-        editDispatch({ type: "RESET" }); // Clear state on success
+        editDispatch({ type: "RESET" });
       })
       .catch((err) => {
         console.error("Failed to update region:", err);
@@ -122,15 +121,18 @@ const RegionsContainer = () => {
     loading: <p>Loading regions...</p>,
     failed: <p>Failed to fetch regions: {JSON.stringify(error)}</p>,
     succeeded: (
-      <RegionsView
-        regions={regions}
-        editingId={editState.editingId}
-        fields={editState.fields}
-        onStartEdit={handleStartEdit}
-        onFieldChange={handleFieldChange}
-        onCancel={handleCancel}
-        onSave={handleSave}
-      />
+      <>
+        {JSON.stringify(editState)}
+        <RegionsView
+          regions={regions}
+          editingId={editState.editingId}
+          fields={editState.fields}
+          onStartEdit={handleStartEdit}
+          onFieldChange={handleFieldChange}
+          onCancel={handleCancel}
+          onSave={handleSave}
+        />
+      </>
     ),
   };
 

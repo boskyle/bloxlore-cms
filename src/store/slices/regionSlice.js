@@ -28,8 +28,6 @@ export const updateRegion = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
-
-      toast(`${id}:${JSON.stringify(response.data)}`);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

@@ -6,12 +6,15 @@ const RegionsView = ({
   fields,
   onStartEdit,
   onFieldChange,
+  onImageChange,
   onCancel,
   onSave,
 }) => {
   return (
     <div className="p-6 space-y-8">
-      <h2 className="text-2xl font-semibold text-gray-800">🌍 Regions</h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold text-gray-800">🌍 Regions</h2>
+      </div>
 
       <div className="grid gap-6 md:grid-cols-2 max-w-[900px] m-auto">
         {regions.map(({ id, name, description, image_path }) => (
@@ -30,7 +33,8 @@ const RegionsView = ({
 
             {/* Info */}
             <div className="flex flex-col justify-between p-4 w-full">
-              <div>
+              <div className="space-y-2">
+                {/* Name */}
                 {editingId === id ? (
                   <input
                     name="name"
@@ -44,9 +48,33 @@ const RegionsView = ({
                     {name}
                   </h3>
                 )}
-                <p className="text-gray-600 text-sm mt-1">
-                  {description || "No description provided."}
-                </p>
+
+                {/* Description */}
+                {editingId === id ? (
+                  <textarea
+                    name="description"
+                    value={fields.description}
+                    onChange={onFieldChange}
+                    className="text-gray-700 border rounded-md px-2 py-1 w-full resize-none"
+                    rows={3}
+                    placeholder="Region description"
+                  />
+                ) : (
+                  <p className="text-gray-600 text-sm">
+                    {description || "No description provided."}
+                  </p>
+                )}
+
+                {/* Image Upload */}
+                {editingId === id && (
+                  <input
+                    type="file"
+                    name="image"
+                    accept="image/*"
+                    onChange={onImageChange}
+                    className="text-sm mt-2"
+                  />
+                )}
               </div>
 
               <div className="mt-4 flex gap-2">
