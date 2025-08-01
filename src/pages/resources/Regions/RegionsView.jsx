@@ -1,90 +1,82 @@
 import React from "react";
 
 const RegionsView = ({
-  regions = [],
-  newRegion,
-  setNewRegion,
-  onChange,
-  onToggleEdit,
+  regions,
+  editingId,
+  fields,
+  onStartEdit,
+  onFieldChange,
+  onCancel,
   onSave,
-  onAdd,
 }) => {
   return (
-    <div className="space-y-6 mx-auto w-200">
-      {/* List of Regions */}
-      {regions.length === 0 ? (
-        <p>No regions found.</p>
-      ) : (
-        regions.map((region, index) => (
-          <div key={region.id || index} className="bg-white shadow p-4 rounded">
-            {region.isEditing ? (
-              <>
-                <input
-                  type="text"
-                  value={region.name}
-                  onChange={(e) => onChange(index, "name", e.target.value)}
-                  className="block w-full mb-2 px-3 py-2 border rounded"
-                />
-                <textarea
-                  value={region.description}
-                  onChange={(e) =>
-                    onChange(index, "description", e.target.value)
-                  }
-                  className="block w-full mb-2 px-3 py-2 border rounded"
-                />
-                <button
-                  onClick={() => onSave(index)}
-                  className="bg-green-600 text-white px-4 py-2 rounded mr-2"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => onToggleEdit(index)}
-                  className="bg-gray-400 text-white px-4 py-2 rounded"
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <>
-                <h2 className="text-xl font-bold">{region.name}</h2>
-                <p className="text-gray-700">{region.description}</p>
-                <button
-                  onClick={() => onToggleEdit(index)}
-                  className="mt-2 text-blue-600 underline"
-                >
-                  Edit
-                </button>
-              </>
-            )}
-          </div>
-        ))
-      )}
+    <div className="p-6 space-y-8">
+      <h2 className="text-2xl font-semibold text-gray-800">🌍 Regions</h2>
 
-      {/* Add New Region */}
-      <div className="bg-white shadow p-4">
-        <h2 className="text-xl font-bold mb-2">Add New Region</h2>
-        <input
-          type="text"
-          placeholder="Region name"
-          value={newRegion.name}
-          onChange={(e) => setNewRegion({ ...newRegion, name: e.target.value })}
-          className="block w-full mb-2 px-3 py-2 border rounded"
-        />
-        <textarea
-          placeholder="Region description"
-          value={newRegion.description}
-          onChange={(e) =>
-            setNewRegion({ ...newRegion, description: e.target.value })
-          }
-          className="block w-full mb-2 px-3 py-2 border rounded"
-        />
-        <button
-          onClick={onAdd}
-          className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Add Region
-        </button>
+      <div className="grid gap-6 md:grid-cols-2 max-w-[900px] m-auto">
+        {regions.map(({ id, name, description, image_path }) => (
+          <div
+            key={id}
+            className="bg-white shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col md:flex-row"
+          >
+            {/* Image */}
+            <div className="w-full h-40 md:h-auto overflow-hidden">
+              <img
+                src={image_path}
+                alt={name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Info */}
+            <div className="flex flex-col justify-between p-4 w-full">
+              <div>
+                {editingId === id ? (
+                  <input
+                    name="name"
+                    value={fields.name}
+                    onChange={onFieldChange}
+                    className="text-xl font-semibold text-gray-800 border rounded-md px-2 py-1 w-full"
+                    autoFocus
+                  />
+                ) : (
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    {name}
+                  </h3>
+                )}
+                <p className="text-gray-600 text-sm mt-1">
+                  {description || "No description provided."}
+                </p>
+              </div>
+
+              <div className="mt-4 flex gap-2">
+                {editingId === id ? (
+                  <>
+                    <button
+                      onClick={onSave}
+                      className="text-sm px-4 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={onCancel}
+                      className="text-sm px-4 py-1.5 rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => onStartEdit(id)}
+                    className="text-sm px-4 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                  >
+                    Edit
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

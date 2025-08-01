@@ -2,6 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import serviceClient from "@services/clients/serviceClient";
 import creatorClient from "@services/clients/creatorClient";
+import { toast } from "react-toastify";
 
 /* 🚀 Fetch all regions (service-level access) */
 export const fetchRegions = createAsyncThunk(
@@ -28,6 +29,7 @@ export const updateRegion = createAsyncThunk(
         },
       });
 
+      toast(`${id}:${JSON.stringify(response.data)}`);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -66,11 +68,12 @@ const regionsSlice = createSlice({
         const index = state.regions.findIndex((r) => r.id === updated.id);
         if (index !== -1) {
           state.regions[index] = updated;
+          toast.success("Update successful");
         }
       })
       .addCase(updateRegion.rejected, (state, action) => {
         state.error = action.payload;
-        alert(state.error.message);
+        toast.error(state.error.message);
       });
   },
 });
