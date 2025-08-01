@@ -1,13 +1,21 @@
 import React from "react";
 
-const DashboardView = () => {
+const DashboardView = ({ onLogout }) => {
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Page Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-          <p className="text-gray-600">Welcome back, creator!</p>
+        {/* Page Header + Logout Button */}
+        <div className="mb-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+            <p className="text-gray-600">Welcome back, creator!</p>
+          </div>
+          <button
+            onClick={onLogout}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Logout
+          </button>
         </div>
 
         {/* Quick Stats */}
@@ -26,7 +34,7 @@ const DashboardView = () => {
           </div>
         </div>
 
-        {/* Placeholder Table */}
+        {/* Recent Activity Table */}
         <div className="bg-white rounded shadow p-4">
           <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
           <table className="min-w-full text-sm">

@@ -5,20 +5,45 @@ import LandingContainer from "@views/landing/LandingContainer";
 import RegisterContainer from "@views/register/RegisterContainer";
 import LoginContainer from "@views/login/LoginContainer";
 import { DashboardContainer } from "@views/dashboard/DashboardContainer";
-import PrivateRoute from "./components/PrivateRoute";
+
+import AuthLayout from "@layouts/AuthLayout"; // your layout component
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<LandingContainer />} />
-      <Route path="/register" element={<RegisterContainer />} />
-      <Route path="/login" element={<LoginContainer />} />
+      {/* Public routes for unauthenticated users only */}
+      <Route
+        path="/"
+        element={
+          <AuthLayout requireAuth={false}>
+            <LandingContainer />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <AuthLayout requireAuth={false}>
+            <RegisterContainer />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <AuthLayout requireAuth={false}>
+            <LoginContainer />
+          </AuthLayout>
+        }
+      />
+
+      {/* Private route for authenticated users only */}
       <Route
         path="/dashboard"
         element={
-          <PrivateRoute>
+          <AuthLayout requireAuth={true}>
             <DashboardContainer />
-          </PrivateRoute>
+          </AuthLayout>
         }
       />
     </Routes>
