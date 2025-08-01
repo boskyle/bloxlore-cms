@@ -7,6 +7,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 // 🔐 Initial state pulls token from localStorage on load
 const initialState = {
   token: localStorage.getItem(TOKEN_KEY) || null,
+  user: null, // ⬅️ add this
 };
 
 // 🧾 Register new user
@@ -54,9 +55,9 @@ export const loginUser = createAsyncThunk(
 // 🛡️ Validate existing token by hitting protected endpoint
 export const validateToken = createAsyncThunk(
   "auth/validateToken",
+
   async (_, { getState, rejectWithValue }) => {
     const token = getState().auth.token;
-
     if (!token) return rejectWithValue("No token found");
 
     try {
@@ -89,6 +90,11 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.token = action.payload;
+      })
+      .addCase(validateToken.fulfilled, (state, action) => {
+        const { email } = action.payload;
+        console.log(email);
+        state.user = email;
       })
       .addCase(validateToken.rejected, (state) => {
         state.token = null;

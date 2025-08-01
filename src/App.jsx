@@ -1,10 +1,10 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import LandingContainer from "@views/landing/LandingContainer";
-import RegisterContainer from "@views/register/RegisterContainer";
-import LoginContainer from "@views/login/LoginContainer";
-import { DashboardContainer } from "@views/dashboard/DashboardContainer";
+import LandingContainer from "@pages/landing/LandingContainer";
+import RegisterContainer from "@pages/register/RegisterContainer";
+import LoginContainer from "@pages/login/LoginContainer";
+import { DashboardContainer } from "@pages/dashboard/DashboardContainer";
 
 import AuthLayout from "@layouts/AuthLayout"; // your layout component
 

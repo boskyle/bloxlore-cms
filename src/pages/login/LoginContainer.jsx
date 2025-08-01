@@ -28,7 +28,7 @@ const LoginContainer = () => {
       const resultAction = await dispatch(loginUser(form));
 
       if (loginUser.fulfilled.match(resultAction)) {
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       } else {
         console.log(form);
         setError(resultAction.payload || "Login failed");

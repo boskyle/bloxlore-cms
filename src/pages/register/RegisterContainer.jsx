@@ -28,7 +28,7 @@ const RegisterContainer = () => {
       const resultAction = await dispatch(registerUser(form));
 
       if (registerUser.fulfilled.match(resultAction)) {
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       } else {
         console.log(form);
         setError(resultAction.payload || "Registration failed");
