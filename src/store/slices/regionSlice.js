@@ -1,4 +1,3 @@
-// regionSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import serviceClient from "@services/clients/serviceClient";
 import creatorClient from "@services/clients/creatorClient";
@@ -17,6 +16,26 @@ export const fetchRegions = createAsyncThunk(
   }
 );
 
+/* 🆕 Create a new region (creator-level access) */
+export const createRegion = createAsyncThunk(
+  "regions/createRegion",
+  async (formData, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const response = await creatorClient.post("/regions", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
 /* ✏️ Update a specific region (creator-level access) */
 export const updateRegion = createAsyncThunk(
   "regions/updateRegion",
@@ -24,14 +43,34 @@ export const updateRegion = createAsyncThunk(
     try {
       const token = getState().auth.token;
 
-      data.append("_method", "PATCH"); //fix for formdata not working with patch
+      data.append("_method", "PATCH"); // Laravel-compatible PATCH via POST
 
       const response = await creatorClient.post(`/regions/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
+
+export const deleteRegion = createAsyncThunk(
+  "regions/deleteRegion",
+  async (id, { getState, rejectWithValue }) => {
+    try {
+      const token = getState().auth.token;
+
+      const response = await creatorClient.delete(`/regions/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      return id; // Return only the ID to remove it from state
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
@@ -43,13 +82,13 @@ const regionsSlice = createSlice({
   name: "regions",
   initialState: {
     regions: [],
-    status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+    status: "idle",
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // ⏳ Fetch Regions
+      // ⏳ Fetch
       .addCase(fetchRegions.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -63,18 +102,41 @@ const regionsSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ✏️ Update Region
+      // ✏️ Update
       .addCase(updateRegion.fulfilled, (state, action) => {
         const updated = action.payload;
         const index = state.regions.findIndex((r) => r.id === updated.id);
         if (index !== -1) {
           state.regions[index] = updated;
-          toast.success("Update successful");
+          toast.success("Region updated");
         }
       })
       .addCase(updateRegion.rejected, (state, action) => {
         state.error = action.payload;
-        toast.error(state.error.message);
+        toast.error(state.error.message || "Failed to update region");
+      })
+
+      // 🆕 Create
+      .addCase(createRegion.fulfilled, (state, action) => {
+        state.regions.push(action.payload);
+        toast.success("Region created");
+      })
+      .addCase(createRegion.rejected, (state, action) => {
+        state.error = action.payload;
+        toast.error(state.error.message || "Failed to create region");
+      })
+
+      // 🗑️ Delete
+      .addCase(deleteRegion.fulfilled, (state, action) => {
+        const deletedId = action.payload;
+        state.regions = state.regions.filter(
+          (region) => region.id !== deletedId
+        );
+        toast.success("Region deleted");
+      })
+      .addCase(deleteRegion.rejected, (state, action) => {
+        state.error = action.payload;
+        toast.error(state.error.message || "Failed to delete region");
       });
   },
 });
