@@ -23,7 +23,10 @@ export const updateRegion = createAsyncThunk(
   async ({ id, data }, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
-      const response = await creatorClient.patch(`/regions/${id}`, data, {
+
+      data.append("_method", "PATCH"); //fix for formdata not working with patch
+
+      const response = await creatorClient.post(`/regions/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -28,6 +28,7 @@ const editReducer = (state, action) => {
         fields: {
           name: action.payload.name ?? "",
           description: action.payload.description ?? "",
+          image: null,
         },
       };
 
@@ -93,15 +94,37 @@ const RegionsContainer = () => {
     editDispatch({ type: "CANCEL_EDIT" });
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      console.log("Valid image file:", file); // 🔍 should show full File info
+      editDispatch({
+        type: "UPDATE_FIELD",
+        payload: { name: "image", value: file },
+      });
+    } else {
+      console.warn("No image file selected.");
+    }
+  };
+
   // 💾 Save updated region to server
   const handleSave = () => {
-    const trimmed = editState.fields.name.trim();
-    if (!trimmed) return; // Basic validation
+    const { name, description, image } = editState.fields;
+
+    const formData = new FormData();
+    formData.append("name", name.trim());
+    formData.append("description", description ?? "");
+
+    if (image instanceof File) {
+      formData.append("image", image); // ✅ This is what was missing
+    } else {
+      console.warn("⚠️ No valid image file found in state");
+    }
 
     dispatch(
       updateRegion({
         id: editState.editingId,
-        data: editState.fields,
+        data: formData,
       })
     )
       .unwrap()
@@ -129,6 +152,7 @@ const RegionsContainer = () => {
           fields={editState.fields}
           onStartEdit={handleStartEdit}
           onFieldChange={handleFieldChange}
+          onImageChange={handleImageUpload}
           onCancel={handleCancel}
           onSave={handleSave}
         />
