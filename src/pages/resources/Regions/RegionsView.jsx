@@ -20,14 +20,14 @@ const RegionsView = ({
         {regions.map(({ id, name, description, image_path }) => (
           <div
             key={id}
-            className="bg-white shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col md:flex-row"
+            className="bg-white shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col"
           >
             {/* Image */}
-            <div className="w-full h-40 md:h-auto overflow-hidden">
+            <div className="w-full h-[200px] overflow-hidden mx-auto">
               <img
                 src={image_path}
                 alt={name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
               />
             </div>
 

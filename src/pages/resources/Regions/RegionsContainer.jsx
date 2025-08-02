@@ -145,7 +145,6 @@ const RegionsContainer = () => {
     failed: <p>Failed to fetch regions: {JSON.stringify(error)}</p>,
     succeeded: (
       <>
-        {JSON.stringify(editState)}
         <RegionsView
           regions={regions}
           editingId={editState.editingId}
