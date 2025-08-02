@@ -5,10 +5,9 @@ set -e
 echo "🚧 Rebuilding and running STAGING frontend..."
 
 # ────────────── 🔧 CONFIG ──────────────
-PROJECT_NAME="bloxlore-cms-staging-frontend"
+PROJECT_NAME="bloxlore-cms-production-frontend"
 SERVICE_NAME="frontend"
-COMPOSE_PATH="./docker/docker-compose.staging.yml"
-PORT=8084
+COMPOSE_PATH="./docker-compose-production.yml"
 
 # ────────────── 🛑 CLEAN PORT CONFLICTS ──────────────
 echo "🔍 Checking for existing container using port $PORT..."
@@ -27,7 +26,7 @@ docker compose -p "$PROJECT_NAME" -f "$COMPOSE_PATH" rm -sf "$SERVICE_NAME"
 
 # ────────────── 🏗️ BUILD ──────────────
 echo "🏗️ Building with APP_ENV=staging..."
-docker compose -p "$PROJECT_NAME" -f "$COMPOSE_PATH" build --build-arg APP_ENV=staging "$SERVICE_NAME"
+docker compose -p "$PROJECT_NAME" -f "$COMPOSE_PATH" build --build-arg APP_ENV=production "$SERVICE_NAME"
 
 # ────────────── 🚀 START ──────────────
 echo "🚀 Starting fresh staging frontend..."

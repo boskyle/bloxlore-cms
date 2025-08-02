@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COMPOSE_PATH="./docker/docker-compose.yml"
+COMPOSE_PATH="./docker-compose.yml"
 
 echo "🔧 Stopping and cleaning up any existing DEV containers, volumes, and orphans..."
 docker compose -f "$COMPOSE_PATH" down --volumes --remove-orphans
