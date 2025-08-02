@@ -21,13 +21,13 @@ const RegionsView = ({
   };
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-6 space-y-8 min-h-screen bg-offwhite">
       {/* Header */}
       <div className="flex justify-between items-center max-w-[900px] mx-auto">
         {editingId === null && (
           <button
             onClick={onStartCreate}
-            className="text-sm px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+            className="text-sm px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer"
           >
             Add Region
           </button>
@@ -201,13 +201,13 @@ const RegionsView = ({
                     <>
                       <button
                         onClick={() => onStartEdit(id)}
-                        className="text-sm px-4 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+                        className="text-sm px-4 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => onDelete(id)}
-                        className="text-sm px-4 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700"
+                        className="text-sm px-4 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 cursor-pointer"
                       >
                         Delete
                       </button>
