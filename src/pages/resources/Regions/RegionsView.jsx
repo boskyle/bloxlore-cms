@@ -1,4 +1,5 @@
 import React from "react";
+import { Camera } from "lucide-react";
 
 const RegionsView = ({
   regions,
@@ -22,14 +23,13 @@ const RegionsView = ({
   return (
     <div className="p-6 space-y-8">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold text-gray-800">🌍 Regions</h2>
+      <div className="flex justify-between items-center max-w-[900px] mx-auto">
         {editingId === null && (
           <button
             onClick={onStartCreate}
             className="text-sm px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
           >
-            + Add Region
+            Add Region
           </button>
         )}
       </div>
@@ -39,16 +39,34 @@ const RegionsView = ({
         {/* ➕ Create Form */}
         {editingId === "new" && (
           <div className="bg-white shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
-            <div className="w-full h-[200px] bg-gray-100 flex items-center justify-center text-gray-400">
-              {fields.image ? (
+            <div className="w-full h-[200px] relative overflow-hidden mx-auto rounded-t-2xl bg-gray-100">
+              {fields.image && (
                 <img
                   src={URL.createObjectURL(fields.image)}
                   alt="Preview"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
                 />
-              ) : (
-                <span>No image uploaded</span>
               )}
+
+              <input
+                id="file-upload-new"
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={onImageChange}
+                className="hidden"
+              />
+
+              <label
+                htmlFor="file-upload-new"
+                className="absolute inset-0 bg-black/40 hover:bg-black/60 flex flex-col items-center justify-center text-white text-sm cursor-pointer transition-all duration-200"
+                title="Upload Image"
+              >
+                <Camera className="w-6 h-6 mb-1" />
+                <span className="font-medium">
+                  {fields.image ? "Change Image" : "Upload Image"}
+                </span>
+              </label>
             </div>
 
             <div className="flex flex-col justify-between p-4 w-full">
@@ -69,15 +87,6 @@ const RegionsView = ({
                 rows={3}
                 placeholder="Region description"
               />
-
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={onImageChange}
-                className="text-sm mt-2"
-              />
-
               <div className="mt-4 flex gap-2">
                 <button
                   onClick={onSave}
@@ -104,14 +113,38 @@ const RegionsView = ({
           return (
             <div
               key={id}
-              className="bg-white shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col"
+              className="bg-white shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col font-cartoon"
             >
-              <div className="w-full h-[200px] overflow-hidden mx-auto">
+              <div className="w-full h-[200px] relative overflow-hidden mx-auto rounded-t-2xl">
                 <img
                   src={previewUrl}
                   alt={name}
                   className="w-full h-full object-cover object-center"
                 />
+
+                {isEditing ? (
+                  <>
+                    <input
+                      id={`file-upload-${editingId}`}
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      onChange={onImageChange}
+                      className="hidden"
+                    />
+
+                    <label
+                      htmlFor={`file-upload-${id}`}
+                      className="absolute inset-0 bg-black/40 hover:bg-black/60 flex flex-col items-center justify-center text-white text-sm cursor-pointer transition-all duration-200"
+                      title="Change Image"
+                    >
+                      <Camera className="w-6 h-6 mb-1" />
+                      <span className="font-medium">Change Image</span>
+                    </label>
+                  </>
+                ) : (
+                  ""
+                )}
               </div>
 
               <div className="flex flex-col justify-between p-4 w-full">
@@ -145,17 +178,6 @@ const RegionsView = ({
                     <p className="text-gray-600 text-sm min-h-[100px]">
                       {description || "No description provided."}
                     </p>
-                  )}
-
-                  {/* Image Upload */}
-                  {isEditing && (
-                    <input
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      onChange={onImageChange}
-                      className="text-sm mt-2"
-                    />
                   )}
                 </div>
 
