@@ -9,6 +9,8 @@ PROJECT_NAME="bloxlore-cms-production-frontend"
 SERVICE_NAME="frontend"
 COMPOSE_PATH="./docker-compose-production.yml"
 
+PORT=8085
+
 # ────────────── 🛑 CLEAN PORT CONFLICTS ──────────────
 echo "🔍 Checking for existing container using port $PORT..."
 CONTAINER_IDS=$(docker ps --filter "publish=$PORT" --format "{{.ID}}")

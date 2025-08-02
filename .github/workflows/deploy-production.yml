@@ -20,7 +20,7 @@ jobs:
       - name: SSH into Atlas and Deploy
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa boskyle@froggie.ca << 'EOF'
-            cd /home/boskyle/webdev/react/bloxlore-cms
+            cd /home/boskyle/webdev/react/bloxlore-cms/docker
             git fetch origin
             git checkout main
             git reset --hard origin/main
