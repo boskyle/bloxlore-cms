@@ -1,6 +1,7 @@
 // RegionsContainer.jsx
 import React, { useEffect, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useCleanImageUpload } from "@hooks/useCleanImageUpload";
 import {
   fetchRegions,
   updateRegion,
@@ -54,6 +55,7 @@ const RegionsContainer = () => {
   const dispatch = useDispatch();
   const { regions, status, error } = useSelector((state) => state.region);
   const [editState, editDispatch] = useReducer(editReducer, initialEditState);
+  const cleanImage = useCleanImageUpload();
 
   useEffect(() => {
     dispatch(fetchRegions());
@@ -81,13 +83,18 @@ const RegionsContainer = () => {
     editDispatch({ type: "CANCEL_EDIT" });
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+
+    try {
+      const cleaned = await cleanImage(file);
       editDispatch({
         type: "UPDATE_FIELD",
-        payload: { name: "image", value: file },
+        payload: { name: "image", value: cleaned },
       });
+    } catch (err) {
+      console.error("❌ Image cleaning failed:", err);
     }
   };
 

@@ -48,6 +48,7 @@ export const updateRegion = createAsyncThunk(
       const response = await creatorClient.post(`/regions/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": undefined, // 👈 force Axios to detect boundary
         },
       });
 
