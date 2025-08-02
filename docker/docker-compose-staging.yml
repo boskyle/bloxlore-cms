@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        APP_ENV: staging
+    environment:
+      APP_ENV: staging
+    ports:
+      - "8084:80"
+    networks:
+      - bloxlore-shared-network
+
+networks:
+  bloxlore-shared-network:
+    external: true
