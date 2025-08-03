@@ -5,6 +5,7 @@
       "@services/*": ["services/*"],
       "@config/*": ["config/*"],
       "@store/*": ["store/*"],
+      "@classes/*": ["classes/*"],
       "@hooks/*": ["hooks/*"],
       "@layouts/*": ["layouts/*"],
       "@assets/*": ["assets/*"],

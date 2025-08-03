@@ -26,6 +26,7 @@ export const registerUser = createAsyncThunk(
     } catch (err) {
       console.log(err);
       const { errors } = err?.response?.data || {};
+      console.log(errors);
       return rejectWithValue(errors);
     }
   }
@@ -45,8 +46,9 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem(TOKEN_KEY, token);
       return token;
     } catch (err) {
+      console.log(err.response);
       return rejectWithValue(
-        err.response?.data?.message || "Login failed. Try again."
+        err.response?.data?.error || "Login failed. Try again."
       );
     }
   }
