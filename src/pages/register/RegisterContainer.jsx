@@ -1,79 +1,69 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerUser } from "@store/slices/authSlice";
 import RegisterView from "./RegisterView";
+import { useFormManager } from "@hooks/useFormManager";
 
 const RegisterContainer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState({});
-  const [touched, setTouched] = useState({});
+  const { form, touched, errors, setField, touchField, setErrors } =
+    useFormManager(
+      {
+        email: "",
+        password: "",
+      },
+      "REGISTER"
+    );
 
   const handleChange = (e) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+    setField(name, value);
   };
 
   const handleBlur = (e) => {
     const { name } = e.target;
-    setTouched((prev) => ({ ...prev, [name]: true }));
-    const validationErrors = validateForm(form);
-    setError(validationErrors || {});
-  };
-
-  const validateForm = (data) => {
-    const errors = {};
-
-    if (!data.email.trim()) {
-      errors.email = ["Email is required."];
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      errors.email = ["Enter a valid email address."];
-    }
-
-    if (!data.password.trim()) {
-      errors.password = ["Password is required."];
-    } else if (data.password.length < 6) {
-      errors.password = ["Password must be at least 6 characters."];
-    }
-
-    return Object.keys(errors).length > 0 ? errors : null;
+    touchField(name);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const clientErrors = validateForm(form);
-    if (clientErrors) {
-      setError(clientErrors);
-      setTouched({ email: true, password: true });
-      return;
-    }
+    // Touch all fields
+    touchField("email");
+    touchField("password");
+
+    // Validate and abort if client-side errors exist
+    if (Object.keys(errors).length > 0) return;
 
     try {
       const resultAction = await dispatch(registerUser(form));
+
       if (registerUser.fulfilled.match(resultAction)) {
         navigate("/dashboard", { replace: true });
       } else {
-        setError(resultAction.payload || { general: ["Registration failed."] });
+        // Handles server-side 422 errors like { errors: { email: [...] } }
+        const errors = resultAction.payload;
+
+        const flattened = Object.values(errors).flat();
+        setErrors({ server: flattened });
       }
     } catch (err) {
-      setError({ general: ["Something went wrong. Try again."] });
+      console.error("Unexpected error during registration:", err);
+      setErrors({ general: ["Something went wrong. Try again."] });
     }
   };
 
   return (
     <RegisterView
       form={form}
-      error={error}
+      errors={errors}
+      touched={touched}
       onChange={handleChange}
       onBlur={handleBlur}
       onSubmit={handleSubmit}
-      touched={touched}
     />
   );
 };
