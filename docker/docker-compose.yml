@@ -1,0 +1,13 @@
+services:
+  frontend:
+    container_name: bloxlore-cms-dev
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.dev
+    ports:
+      - "5174:5174"
+    volumes:
+      - ../:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true

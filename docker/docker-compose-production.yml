@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        APP_ENV: production
+    environment:
+      APP_ENV: production
+    ports:
+      - "8085:80"
+    networks:
+      - bloxlore-shared-network
+
+networks:
+  bloxlore-shared-network:
+    external: true
