@@ -24,9 +24,9 @@ export const registerUser = createAsyncThunk(
       localStorage.setItem(TOKEN_KEY, token);
       return token;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Registration failed. Try again."
-      );
+      console.log(err);
+      const { errors } = err?.response?.data || {};
+      return rejectWithValue(errors);
     }
   }
 );
