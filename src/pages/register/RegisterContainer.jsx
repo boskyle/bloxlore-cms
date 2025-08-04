@@ -9,7 +9,7 @@ const RegisterContainer = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { form, touched, errors, setField, touchField, setErrors, resetForm } =
+  const { form, touched, errors, setField, touchField, setErrors } =
     useFormManager(
       {
         email: "",
@@ -41,7 +41,6 @@ const RegisterContainer = () => {
 
       if (registerUser.fulfilled.match(resultAction)) {
         // Optional: display a success toast or notification here
-        resetForm();
         navigate("/login", { replace: true }); // redirect user to login page
       } else {
         const errors = resultAction.payload;
