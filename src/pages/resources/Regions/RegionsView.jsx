@@ -21,13 +21,13 @@ const RegionsView = ({
   };
 
   return (
-    <div className="p-6 space-y-8 min-h-screen bg-offwhite">
+    <div className="p-6 space-y-4 min-h-screen  bg-gradient-to-t from-green-900 to-gray-800 text-white">
       {/* Header */}
       <div className="flex justify-between items-center max-w-[900px] mx-auto">
         {editingId === null && (
           <button
             onClick={onStartCreate}
-            className="text-sm px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 cursor-pointer"
+            className="text-sm px-4 py-2 rounded-lg border cursor-pointer"
           >
             Add Region
           </button>
@@ -38,7 +38,7 @@ const RegionsView = ({
       <div className="grid gap-6 md:grid-cols-2 max-w-[900px] m-auto">
         {/* ➕ Create Form */}
         {editingId === "new" && (
-          <div className="bg-white shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
+          <div className=" bg-[#333d55] shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col">
             <div className="w-full h-[200px] relative overflow-hidden mx-auto rounded-t-2xl bg-gray-100">
               {fields.image && (
                 <img
@@ -75,7 +75,7 @@ const RegionsView = ({
                 value={fields.name}
                 onChange={onFieldChange}
                 placeholder="Region name"
-                className="text-xl font-semibold text-gray-800 border rounded-md px-2 py-1 w-full"
+                className="text-xl font-semibold border rounded-md px-2 py-1 w-full"
                 autoFocus
               />
 
@@ -83,20 +83,20 @@ const RegionsView = ({
                 name="description"
                 value={fields.description}
                 onChange={onFieldChange}
-                className="text-gray-700 border rounded-md px-2 py-1 w-full resize-none mt-2"
+                className="border  rounded-md px-2 py-1 w-full resize-none mt-2"
                 rows={3}
                 placeholder="Region description"
               />
               <div className="mt-4 flex gap-2">
                 <button
                   onClick={onSave}
-                  className="text-sm px-4 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                  className="text-sm px-4 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700 cursor-pointer"
                 >
                   Save
                 </button>
                 <button
                   onClick={onCancel}
-                  className="text-sm px-4 py-1.5 rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400"
+                  className="text-sm px-4 py-1.5 rounded-lg border cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -113,7 +113,7 @@ const RegionsView = ({
           return (
             <div
               key={id}
-              className="bg-white shadow-md rounded-2xl border border-gray-200 overflow-hidden flex flex-col font-cartoon"
+              className="bg-[#333d55] shadow-md rounded-2xl overflow-hidden flex flex-col font-cartoon"
             >
               <div className="w-full h-[200px] relative overflow-hidden mx-auto rounded-t-2xl">
                 <img
@@ -155,13 +155,11 @@ const RegionsView = ({
                       name="name"
                       value={fields.name}
                       onChange={onFieldChange}
-                      className="text-xl font-semibold text-gray-800 border rounded-md px-2 py-1 w-full"
+                      className="text-xl font-semibold border rounded-md px-2 py-1 w-full"
                       autoFocus
                     />
                   ) : (
-                    <h3 className="text-xl font-semibold text-gray-800">
-                      {name}
-                    </h3>
+                    <h3 className="text-xl font-semibold">{name}</h3>
                   )}
 
                   {/* Description */}
@@ -170,12 +168,12 @@ const RegionsView = ({
                       name="description"
                       value={fields.description}
                       onChange={onFieldChange}
-                      className="text-gray-700 border rounded-md px-2 py-1 w-full resize-none"
+                      className="border rounded-md px-2 py-1 w-full resize-none"
                       rows={3}
                       placeholder="Region description"
                     />
                   ) : (
-                    <p className="text-gray-600 text-sm min-h-[100px]">
+                    <p className="text-sm min-h-[100px]">
                       {description || "No description provided."}
                     </p>
                   )}
@@ -186,13 +184,13 @@ const RegionsView = ({
                     <>
                       <button
                         onClick={onSave}
-                        className="text-sm px-4 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700"
+                        className="text-sm px-4 py-1.5 rounded-lg bg-green-600 text-white hover:bg-green-700 cursor-pointer"
                       >
                         Save
                       </button>
                       <button
                         onClick={onCancel}
-                        className="text-sm px-4 py-1.5 rounded-lg bg-gray-300 text-gray-800 hover:bg-gray-400"
+                        className="text-sm px-4 py-1.5 rounded-lg border cursor-pointer"
                       >
                         Cancel
                       </button>
@@ -201,13 +199,13 @@ const RegionsView = ({
                     <>
                       <button
                         onClick={() => onStartEdit(id)}
-                        className="text-sm px-4 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                        className="text-sm px-4 py-1.5 rounded-lg border border-white cursor-pointer"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => onDelete(id)}
-                        className="text-sm px-4 py-1.5 rounded-lg bg-red-600 text-white hover:bg-red-700 cursor-pointer"
+                        className="text-sm px-4 py-1.5 rounded-lg border border-white  cursor-pointer"
                       >
                         Delete
                       </button>
