@@ -20,14 +20,11 @@ export const registerUser = createAsyncThunk(
         password,
       });
 
-      const token = res.data.access_token; // note: different key name than login!
-      localStorage.setItem(TOKEN_KEY, token);
-      return token;
+      return res.data.message; // return success message, e.g. "Registration successful"
     } catch (err) {
-      console.log(err);
+      console.error("Registration error:", err);
       const { errors } = err?.response?.data || {};
-      console.log(errors);
-      return rejectWithValue(errors);
+      return rejectWithValue(errors || { general: ["Unknown error."] });
     }
   }
 );
