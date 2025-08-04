@@ -28,3 +28,6 @@ dist-ssr
 .env.staging
 .env.production
 .env*
+
+#shellscripts local
+cleanup-branches.sh
