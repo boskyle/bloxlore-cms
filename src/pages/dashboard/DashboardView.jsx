@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 
 const DashboardView = ({ onLogout, user }) => {
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gradient-to-t from-green-900 to-gray-800 p-6  text-offwhite">
       <div className="max-w-7xl mx-auto">
         {/* Page Header + Logout Button */}
         <div className="mb-6 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
             <p className="text-gray-600">
-              Welcome back {JSON.stringify(user?.email || "unkown")}
+              {/* Welcome back {JSON.stringify(user?.email || "unkown")} */}
             </p>
           </div>
           <button
@@ -23,21 +23,21 @@ const DashboardView = ({ onLogout, user }) => {
 
         {/* Quick Stats */}
         <h2 className="mb-10 text-4xl font-bold">Manage Resources</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link
             to="/regions"
-            className="text-2xl 
+            className="text-2xl
+             
             font-semibold 
-            text-gray-800 
+
             block px-4 
             py-3 
-            bg-white 
+          bg-[#333d55] 
             rounded 
             shadow 
-            hover:bg-gray-50 
             transition"
           >
-            🌍 Regions
+            Regions
           </Link>
         </div>
       </div>
