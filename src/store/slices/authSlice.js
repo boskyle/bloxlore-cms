@@ -52,10 +52,10 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// 🛡️ Validate token
+// 🛡️ Validate token + refresh fallback
 export const validateToken = createAsyncThunk(
   "auth/validateToken",
-  async (_, { getState, rejectWithValue }) => {
+  async (_, { getState, dispatch, rejectWithValue }) => {
     const token = getState().auth.token;
     if (!token) return rejectWithValue("No token found");
 
@@ -68,6 +68,34 @@ export const validateToken = createAsyncThunk(
 
       return res.data;
     } catch (err) {
+      if (err.response?.status === 401) {
+        try {
+          const refreshRes = await axios.post(
+            `${API_BASE}/creator/refresh`,
+            null,
+            {
+              withCredentials: true, // Send HttpOnly refresh_token cookie
+            }
+          );
+
+          const newAccessToken = refreshRes.data.access_token;
+
+          dispatch(setToken(newAccessToken));
+          localStorage.setItem(TOKEN_KEY, newAccessToken);
+
+          const retryRes = await axios.get(`${API_BASE}/creator/me`, {
+            headers: {
+              Authorization: `Bearer ${newAccessToken}`,
+            },
+          });
+
+          return retryRes.data;
+        } catch (refreshErr) {
+          console.error("Token refresh failed:", refreshErr);
+          return rejectWithValue("Session expired. Please login again.");
+        }
+      }
+
       console.error("Token validation failed:", err);
       return rejectWithValue("Invalid or expired token");
     }
@@ -83,19 +111,21 @@ const authSlice = createSlice({
       state.user = null;
       localStorage.removeItem(TOKEN_KEY);
     },
+    setToken(state, action) {
+      state.token = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
-      // Register: do not modify token
       .addCase(registerUser.fulfilled, (_, action) => {
         toast.success(action.payload, {
-          position: "top-center", // 👈 centered at top
+          position: "top-center",
           autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          closeButton: false, // ❌ no close button
+          closeButton: false,
           theme: "light",
         });
       })
@@ -113,5 +143,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setToken } = authSlice.actions;
 export default authSlice.reducer;
