@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import serviceClient from "@services/clients/serviceClient";
 import creatorClient from "@services/clients/creatorClient";
 import { toast } from "react-toastify";
+import { ensureValidToken } from "./authSlice";
 
 /* 🚀 Fetch all regions (service-level access) */
 export const fetchRegions = createAsyncThunk(
@@ -19,11 +20,11 @@ export const fetchRegions = createAsyncThunk(
 /* 🆕 Create a new region (creator-level access) */
 export const createRegion = createAsyncThunk(
   "regions/createRegion",
-  async (formData, { getState, rejectWithValue }) => {
+  async (formData, { dispatch, rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
+      const token = await dispatch(ensureValidToken()).unwrap();
 
-      const response = await creatorClient.post("/regions", formData, {
+      const response = await creatorClient.post("/creator/regions", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -39,18 +40,21 @@ export const createRegion = createAsyncThunk(
 /* ✏️ Update a specific region (creator-level access) */
 export const updateRegion = createAsyncThunk(
   "regions/updateRegion",
-  async ({ id, data }, { getState, rejectWithValue }) => {
+  async ({ id, data }, { dispatch, rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
+      const token = await dispatch(ensureValidToken()).unwrap();
 
-      data.append("_method", "PATCH"); // Laravel-compatible PATCH via POST
+      data.append("_method", "PATCH");
 
-      const response = await creatorClient.post(`/regions/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": undefined, // 👈 force Axios to detect boundary
-        },
-      });
+      const response = await creatorClient.post(
+        `/creator/regions/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       return response.data.data;
     } catch (error) {
@@ -58,20 +62,21 @@ export const updateRegion = createAsyncThunk(
     }
   }
 );
-/* 🗑️ Delete a specifc region (creator-level access) */
+
+/* 🗑️ Delete a specific region (creator-level access) */
 export const deleteRegion = createAsyncThunk(
   "regions/deleteRegion",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { dispatch, rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
+      const token = await dispatch(ensureValidToken()).unwrap();
 
-      const response = await creatorClient.delete(`/regions/${id}`, {
+      await creatorClient.delete(`/creator/regions/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      return id; // Return only the ID to remove it from state
+      return id;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }

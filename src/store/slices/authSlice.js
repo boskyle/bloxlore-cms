@@ -35,10 +35,11 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${API_BASE}/creator/login`, {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${API_BASE}/creator/login`,
+        { email, password },
+        { withCredentials: true }
+      );
 
       const token = res.data.access_token;
       localStorage.setItem(TOKEN_KEY, token);
@@ -52,56 +53,62 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-// 🛡️ Validate token + refresh fallback
-export const validateToken = createAsyncThunk(
-  "auth/validateToken",
+// 🔁 Ensure token is valid or refresh it
+export const ensureValidToken = createAsyncThunk(
+  "auth/ensureValidToken",
   async (_, { getState, dispatch, rejectWithValue }) => {
     const token = getState().auth.token;
-    if (!token) return rejectWithValue("No token found");
+    if (!token) return rejectWithValue("No token");
 
     try {
-      const res = await axios.get(`${API_BASE}/creator/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await axios.get(`${API_BASE}/creator/me`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      return res.data;
+      return token;
     } catch (err) {
       if (err.response?.status === 401) {
         try {
           const refreshRes = await axios.post(
             `${API_BASE}/creator/refresh`,
             null,
-            {
-              withCredentials: true, // Send HttpOnly refresh_token cookie
-            }
+            { withCredentials: true }
           );
-
-          const newAccessToken = refreshRes.data.access_token;
-
-          dispatch(setToken(newAccessToken));
-          localStorage.setItem(TOKEN_KEY, newAccessToken);
-
-          const retryRes = await axios.get(`${API_BASE}/creator/me`, {
-            headers: {
-              Authorization: `Bearer ${newAccessToken}`,
-            },
-          });
-
-          return retryRes.data;
+          console.log("refresh");
+          const newToken = refreshRes.data.access_token;
+          dispatch(setToken(newToken));
+          localStorage.setItem(TOKEN_KEY, newToken);
+          return newToken;
         } catch (refreshErr) {
-          console.error("Token refresh failed:", refreshErr);
+          dispatch(logout());
           return rejectWithValue("Session expired. Please login again.");
         }
       }
 
-      console.error("Token validation failed:", err);
-      return rejectWithValue("Invalid or expired token");
+      return rejectWithValue("Invalid token");
     }
   }
 );
 
+// 🛡️ Validate user session (with fallback refresh)
+export const validateToken = createAsyncThunk(
+  "auth/validateToken",
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const token = await dispatch(ensureValidToken()).unwrap();
+
+      const res = await axios.get(`${API_BASE}/creator/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err?.message || "Token validation failed");
+    }
+  }
+);
+
+// 🧩 Auth slice
 const authSlice = createSlice({
   name: "auth",
   initialState,
