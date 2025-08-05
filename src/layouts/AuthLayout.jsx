@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { validateToken } from "@store/slices/authSlice";
+import Navbar from "@components/Navbar/Navbar";
 
 const AuthLayout = ({ children, requireAuth }) => {
   const dispatch = useDispatch();
@@ -25,6 +26,15 @@ const AuthLayout = ({ children, requireAuth }) => {
   // 🔁 Redirect if logged in and trying to visit login/register
   if (!requireAuth && isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  if (isAuthenticated) {
+    return (
+      <>
+        <Navbar />
+        {children}
+      </>
+    );
   }
 
   // ✅ Allowed access

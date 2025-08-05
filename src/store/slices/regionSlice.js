@@ -1,9 +1,11 @@
+// src/store/slices/regionSlice.js
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import serviceClient from "@services/clients/serviceClient";
-import creatorClient from "@services/clients/creatorClient";
+import { createCreatorClient } from "@services/clients/createCreatorClient";
 import { toast } from "react-toastify";
 
-/* 🚀 Fetch all regions (service-level access) */
+/* 🚀 Fetch all regions (public/service-level access) */
 export const fetchRegions = createAsyncThunk(
   "regions/fetchRegions",
   async (_, thunkAPI) => {
@@ -19,16 +21,10 @@ export const fetchRegions = createAsyncThunk(
 /* 🆕 Create a new region (creator-level access) */
 export const createRegion = createAsyncThunk(
   "regions/createRegion",
-  async (formData, { getState, rejectWithValue }) => {
+  async (formData, { dispatch, getState, rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-
-      const response = await creatorClient.post("/regions", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
+      const client = createCreatorClient({ getState, dispatch });
+      const response = await client.post("/creator/regions", formData);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -36,43 +32,34 @@ export const createRegion = createAsyncThunk(
   }
 );
 
-/* ✏️ Update a specific region (creator-level access) */
+/* ✏️ Update a region (creator-level access) */
 export const updateRegion = createAsyncThunk(
   "regions/updateRegion",
-  async ({ id, data }, { getState, rejectWithValue }) => {
+  async ({ id, data }, { dispatch, getState, rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
+      const client = createCreatorClient({ getState, dispatch });
 
-      data.append("_method", "PATCH"); // Laravel-compatible PATCH via POST
+      // Laravel expects method spoofing for PATCH via POST
+      data.append("_method", "PATCH");
 
-      const response = await creatorClient.post(`/regions/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": undefined, // 👈 force Axios to detect boundary
-        },
-      });
-
+      const response = await client.post(`/creator/regions/${id}`, data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
   }
 );
-/* 🗑️ Delete a specifc region (creator-level access) */
+
+/* 🗑️ Delete a region (creator-level access) */
 export const deleteRegion = createAsyncThunk(
   "regions/deleteRegion",
-  async (id, { getState, rejectWithValue }) => {
+  async (id, { dispatch, getState, rejectWithValue }) => {
     try {
-      const token = getState().auth.token;
-
-      const response = await creatorClient.delete(`/regions/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      return id; // Return only the ID to remove it from state
+      const client = createCreatorClient({ getState, dispatch });
+      await client.delete(`/creator/regions/${id}`);
+      return id;
     } catch (error) {
+      console.error("❌ deleteRegion error:", error);
       return rejectWithValue(error.response?.data || error.message);
     }
   }
@@ -103,6 +90,16 @@ const regionsSlice = createSlice({
         state.error = action.payload;
       })
 
+      // 🆕 Create
+      .addCase(createRegion.fulfilled, (state, action) => {
+        state.regions.push(action.payload);
+        toast.success("Region created");
+      })
+      .addCase(createRegion.rejected, (state, action) => {
+        state.error = action.payload;
+        toast.error(state.error.message || "Failed to create region");
+      })
+
       // ✏️ Update
       .addCase(updateRegion.fulfilled, (state, action) => {
         const updated = action.payload;
@@ -117,22 +114,9 @@ const regionsSlice = createSlice({
         toast.error(state.error.message || "Failed to update region");
       })
 
-      // 🆕 Create
-      .addCase(createRegion.fulfilled, (state, action) => {
-        state.regions.push(action.payload);
-        toast.success("Region created");
-      })
-      .addCase(createRegion.rejected, (state, action) => {
-        state.error = action.payload;
-        toast.error(state.error.message || "Failed to create region");
-      })
-
       // 🗑️ Delete
       .addCase(deleteRegion.fulfilled, (state, action) => {
-        const deletedId = action.payload;
-        state.regions = state.regions.filter(
-          (region) => region.id !== deletedId
-        );
+        state.regions = state.regions.filter((r) => r.id !== action.payload);
         toast.success("Region deleted");
       })
       .addCase(deleteRegion.rejected, (state, action) => {
