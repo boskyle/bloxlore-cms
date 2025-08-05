@@ -53,6 +53,24 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// 🛡️ Validate user session (with fallback refresh)
+export const validateToken = createAsyncThunk(
+  "auth/validateToken",
+  async (_, { dispatch, rejectWithValue }) => {
+    try {
+      const token = await dispatch(ensureValidToken()).unwrap();
+
+      const res = await axios.get(`${API_BASE}/creator/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err?.message || "Token validation failed");
+    }
+  }
+);
+
 // 🔁 Ensure token is valid or refresh it
 export const ensureValidToken = createAsyncThunk(
   "auth/ensureValidToken",
@@ -86,24 +104,6 @@ export const ensureValidToken = createAsyncThunk(
       }
 
       return rejectWithValue("Invalid token");
-    }
-  }
-);
-
-// 🛡️ Validate user session (with fallback refresh)
-export const validateToken = createAsyncThunk(
-  "auth/validateToken",
-  async (_, { dispatch, rejectWithValue }) => {
-    try {
-      const token = await dispatch(ensureValidToken()).unwrap();
-
-      const res = await axios.get(`${API_BASE}/creator/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      return res.data;
-    } catch (err) {
-      return rejectWithValue(err?.message || "Token validation failed");
     }
   }
 );
