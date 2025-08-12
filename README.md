@@ -1,12 +1,25 @@
-# React + Vite
+# BloxLore CMS
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BloxLore CMS is a secure, creator-focused content management system designed to power and manage game-related content for the BloxLore platform.  
+It enables internal creators to efficiently add, update, and organize in-game data such as regions, quests, and other dynamic content, all through an intuitive and responsive interface.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎯 Purpose
+The CMS streamlines the process of managing game content without requiring direct engineering involvement.  
+It integrates seamlessly with the backend API to provide real-time updates, secure authentication, and a smooth editorial workflow.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🔑 Core Highlights
+- **Secure JWT Authentication** with access/refresh token handling.
+- **Centralized API Client** for consistent, authenticated requests.
+- **Responsive UI** built for creators, with accessible navigation and clean design.
+- **Modular Architecture** that supports scalable feature additions.
+- **Creator Workflow Optimization** with instant form handling and media previews.
+
+---
+
+## 🌱 Vision
+BloxLore CMS serves as the central hub for content creation and management, designed to grow alongside the game’s evolving needs.  
+Future updates will expand its capabilities to manage quests, rewards, and other interactive game elements while maintaining a secure, user-friendly experience.
